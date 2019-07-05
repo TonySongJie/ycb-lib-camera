@@ -1,4 +1,4 @@
-package com.ycb.camera
+package com.ycb.test
 
 import org.junit.Test
 

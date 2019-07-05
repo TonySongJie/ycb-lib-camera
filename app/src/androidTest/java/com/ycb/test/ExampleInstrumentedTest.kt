@@ -1,4 +1,4 @@
-package com.ycb.camera
+package com.ycb.test
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
