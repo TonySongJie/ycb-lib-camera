@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	tools:context=".MainActivity">
 	
-	<com.ycb.camera.widget.ScanfCarView
+	<com.ycb.camera.widget.AutoPhotoView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
+	
+	<com.ycb.camera.widget.ScanfBoxView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:sbv_border_color="@color/colorAccent"
+		app:sbv_corner_color="@color/colorPrimary"
+		app:sbv_mask_color="@color/colorPrimaryDark1" />
 </android.support.constraint.ConstraintLayout>

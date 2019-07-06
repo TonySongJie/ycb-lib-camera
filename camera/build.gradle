@@ -27,6 +27,23 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    // 防止编译的时候oom、GC
+    dexOptions {
+        jumboMode = false
+        javaMaxHeapSize "4G"
+        preDexLibraries = false
+    }
 }
 
 dependencies {

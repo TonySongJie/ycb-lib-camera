@@ -16,7 +16,10 @@ import android.view.TextureView
 import android.view.View
 import android.view.WindowManager
 
-class ScanfCarView : TextureView, TextureView.SurfaceTextureListener, View.OnLayoutChangeListener {
+/**
+ * @desc TODO->自动拍照视图
+ */
+class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLayoutChangeListener {
 
     private val mPreviewWidth = 640
     private val mPreviewHeight = 480
@@ -89,7 +92,7 @@ class ScanfCarView : TextureView, TextureView.SurfaceTextureListener, View.OnLay
         }
 
         this.apply {
-            surfaceTextureListener = this@ScanfCarView
+            surfaceTextureListener = this@AutoPhotoView
         }
     }
 
@@ -144,7 +147,7 @@ class ScanfCarView : TextureView, TextureView.SurfaceTextureListener, View.OnLay
         val surfaceDimensions = RectF(0f, 0f, mDisplayWidth.toFloat(), mDisplayHeight.toFloat())
         val matrix = Matrix()
         matrix.setRectToRect(previewRect, surfaceDimensions, Matrix.ScaleToFit.FILL)
-        this@ScanfCarView.setTransform(matrix)
+        this@AutoPhotoView.setTransform(matrix)
 
         var displayRotation = 0
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
