@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.ycb.camera.widget.AutoPhotoView
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,8 +17,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onPhotoSuc(picPath: String) {
                 // TODO->拍照成功，开始base64编码
-                File(picPath).deleteOnExit()
-                finish()
+//                finish()
             }
 
             override fun onPhotoFail() {

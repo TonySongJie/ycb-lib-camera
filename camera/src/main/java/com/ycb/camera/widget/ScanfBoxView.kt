@@ -32,6 +32,7 @@ class ScanfBoxView : View {
     private var mTipText = "这是随便写的测试文字"
     private var mTipTextSl: StaticLayout? = null
 
+    private var mScanLineY = 0
     private var mScanLineSize = 0
     private var mScanLineColor = 0
 
@@ -71,13 +72,11 @@ class ScanfBoxView : View {
             return
         }
 
-        drawMask(canvas)
-
-        drawBorderLine(canvas)
-
-        drawCornerLine(canvas)
-
-        drawTipText(canvas)
+//        drawMask(canvas)
+//        drawBorderLine(canvas)
+//        drawCornerLine(canvas)
+//        drawTipText(canvas)
+        drawSanfLine(canvas)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -233,6 +232,32 @@ class ScanfBoxView : View {
             mTipTextSl?.draw(canvas)
             canvas.restore()
         }
+
+        postInvalidateDelayed(
+            1000L,
+            mFramingRect!!.left,
+            mFramingRect!!.top,
+            mFramingRect!!.right,
+            mFramingRect!!.bottom
+        )
+    }
+
+    private fun drawSanfLine(canvas: Canvas?) {
+        mPaint.color = Color.WHITE
+
+        if (mScanLineY > (canvas?.height!! - 48)) {
+            mScanLineY = 0
+        } else {
+            mScanLineY += 1
+        }
+
+        canvas.drawLine(
+            0f,
+            mScanLineY.toFloat(),
+            canvas.width.toFloat(),
+            mScanLineY.toFloat(),
+            mPaint
+        )
     }
 
     private fun calFramingRect() {
