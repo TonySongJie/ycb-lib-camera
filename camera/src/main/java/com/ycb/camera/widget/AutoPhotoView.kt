@@ -10,29 +10,52 @@ import android.graphics.RectF
 import android.graphics.SurfaceTexture
 import android.hardware.Camera
 import android.os.Build
+import android.os.Handler
+import android.os.Message
 import android.util.AttributeSet
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.WindowManager
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 /**
  * @desc TODO->自动拍照视图
  */
 class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLayoutChangeListener {
 
+    private val mContext: Context
+    private val mStartPicture = 0
     private val mPreviewWidth = 640
     private val mPreviewHeight = 480
-    private val mContext: Context
 
     private var mWidth = 0f
     private var mHeight = 0f
+    private var mImagePath = ""
+    private var mImageName = ""
     private var mDisplayWidth = 0
     private var mDisplayHeight = 0
     private var isCanTakePicture = false
 
     private var mCamera: Camera? = null
     private var mCameraParams: Camera.Parameters? = null
+    private var mPhotoCallback: AutoPhotoCallback? = null
+
+    private val mTakePicureHandler = Handler(object : Handler.Callback {
+        override fun handleMessage(msg: Message): Boolean {
+            when (msg.what) {
+                mStartPicture -> {
+                    takePicture()
+                    return true
+                }
+            }
+
+            return false
+        }
+    })
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -55,6 +78,13 @@ class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLa
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+
+            Thread(Runnable {
+                Thread.sleep(5 * 1000)
+                val msg = Message()
+                msg.what = mStartPicture
+                mTakePicureHandler.sendMessage(msg)
+            }).start()
         }
     }
 
@@ -82,6 +112,15 @@ class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLa
     ) {
         mWidth = (right - left).toFloat()
         mHeight = (bottom - top).toFloat()
+    }
+
+    fun setImagePath(imagePath: String, imageName: String) {
+        mImagePath = imagePath
+        mImageName = imageName
+    }
+
+    fun addPhotoCallback(callback: AutoPhotoCallback) {
+        mPhotoCallback = callback
     }
 
     private fun init() {
@@ -167,5 +206,58 @@ class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLa
             orientation = (360 - orientation) % 360
         }
         return orientation
+    }
+
+    private fun takePicture() {
+        mCamera?.apply {
+            takePicture(null, null, Camera.PictureCallback { bytes, camera ->
+                val imagesPath = if (mImagePath.isEmpty()) "${mContext.filesDir}/images" else mImagePath
+
+                val imagesDir = File(imagesPath)
+                if (!imagesDir.exists()) {
+                    imagesDir.mkdirs()
+                }
+
+                val imageName = if (mImageName.isEmpty()) "ycb-${System.currentTimeMillis()}.png" else mImageName
+                val imageFile = File(imagesPath, imageName)
+                imageFile.deleteOnExit()
+
+                val fos: FileOutputStream?
+                try {
+                    fos = FileOutputStream(imageFile)
+                    try {
+                        fos.write(bytes)
+                        fos.flush()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                    fos.close()
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                }
+
+
+                if (mPhotoCallback != null) {
+                    if (imageFile.exists()) {
+                        mPhotoCallback?.onPhotoSuc(imageFile.path)
+                    } else {
+                        mPhotoCallback?.onPhotoFail()
+                        camera.startPreview()
+                    }
+                } else {
+                    mPhotoCallback?.onPhotoFail()
+                    imageFile.deleteOnExit()
+                    camera.startPreview()
+                }
+            })
+        }
+    }
+
+    interface AutoPhotoCallback {
+
+        fun onPhotoSuc(picPath: String)
+
+        fun onPhotoFail()
     }
 }
