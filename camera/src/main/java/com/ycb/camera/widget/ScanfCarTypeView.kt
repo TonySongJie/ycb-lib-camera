@@ -42,7 +42,7 @@ class ScanfCarTypeView : TextureView, TextureView.SurfaceTextureListener, View.O
 
     private var mCamera: Camera? = null
     private var mCameraParams: Camera.Parameters? = null
-    private var mPhotoCallback: AutoPhotoCallback? = null
+    private var mPhotoCallback: TakePictureCallback? = null
 
     private val mTakePicureHandler = Handler(object : Handler.Callback {
         override fun handleMessage(msg: Message): Boolean {
@@ -120,7 +120,7 @@ class ScanfCarTypeView : TextureView, TextureView.SurfaceTextureListener, View.O
         mImageName = imageName
     }
 
-    fun addPhotoCallback(callback: AutoPhotoCallback) {
+    fun addPhotoCallback(callback: TakePictureCallback) {
         mPhotoCallback = callback
     }
 
@@ -156,13 +156,13 @@ class ScanfCarTypeView : TextureView, TextureView.SurfaceTextureListener, View.O
 
                 if (mPhotoCallback != null) {
                     if (imageFile.exists()) {
-                        mPhotoCallback?.onPhotoSuc(imageFile.path)
+                        mPhotoCallback?.onTakePictureSuc(imageFile.path)
                     } else {
-                        mPhotoCallback?.onPhotoFail()
+                        mPhotoCallback?.onTakePictureFail()
                         camera.startPreview()
                     }
                 } else {
-                    mPhotoCallback?.onPhotoFail()
+                    mPhotoCallback?.onTakePictureFail()
                     imageFile.deleteOnExit()
                     camera.startPreview()
                 }
@@ -255,10 +255,10 @@ class ScanfCarTypeView : TextureView, TextureView.SurfaceTextureListener, View.O
         return orientation
     }
 
-    interface AutoPhotoCallback {
+    interface TakePictureCallback {
 
-        fun onPhotoSuc(picPath: String)
+        fun onTakePictureSuc(picPath: String)
 
-        fun onPhotoFail()
+        fun onTakePictureFail()
     }
 }

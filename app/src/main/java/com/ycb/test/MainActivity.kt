@@ -17,9 +17,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         test.setImagePath("$filesDir/images", "ycb_${System.currentTimeMillis()}.png")
-        test.addPhotoCallback(object : ScanfCarTypeView.AutoPhotoCallback {
+        test.addPhotoCallback(object : ScanfCarTypeView.TakePictureCallback {
 
-            override fun onPhotoSuc(picPath: String) {
+            override fun onTakePictureSuc(picPath: String) {
                 // TODO->拍照成功，开始base64编码
                 finish()
             }
