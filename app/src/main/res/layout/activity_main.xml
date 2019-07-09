@@ -6,15 +6,20 @@
 	android:layout_height="match_parent"
 	tools:context=".MainActivity">
 	
-	<com.ycb.camera.widget.AutoPhotoView
+	<com.ycb.camera.widget.ScanfCarTypeView
 		android:id="@+id/test"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
 	
-	<com.ycb.camera.widget.ScanfBoxView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		app:sbv_border_color="@color/colorAccent"
-		app:sbv_corner_color="@color/colorPrimary"
-		app:sbv_mask_color="@color/colorPrimaryDark1" />
+	<ImageButton
+		android:id="@+id/ibtnMainStartScanf"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="32dp"
+		android:background="@null"
+		android:src="@drawable/icon_scanf_car_s"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		tools:ignore="ContentDescription" />
 </android.support.constraint.ConstraintLayout>

@@ -3,7 +3,7 @@ package com.ycb.test
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.ycb.camera.widget.AutoPhotoView
+import com.ycb.camera.widget.ScanfCarTypeView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -12,12 +12,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        ibtnMainStartScanf.setOnClickListener {
+            test.takePicture()
+        }
+
         test.setImagePath("$filesDir/images", "ycb_${System.currentTimeMillis()}.png")
-        test.addPhotoCallback(object : AutoPhotoView.AutoPhotoCallback {
+        test.addPhotoCallback(object : ScanfCarTypeView.AutoPhotoCallback {
 
             override fun onPhotoSuc(picPath: String) {
                 // TODO->拍照成功，开始base64编码
-//                finish()
+                finish()
             }
 
             override fun onPhotoFail() {

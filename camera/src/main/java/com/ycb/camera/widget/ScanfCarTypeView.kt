@@ -23,9 +23,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 /**
- * @desc TODO->自动拍照视图
+ * @desc TODO->扫描车型的预览和拍照视图
  */
-class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLayoutChangeListener {
+class ScanfCarTypeView : TextureView, TextureView.SurfaceTextureListener, View.OnLayoutChangeListener {
 
     private val mContext: Context
     private val mStartPicture = 0
@@ -79,12 +79,13 @@ class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLa
                 e.printStackTrace()
             }
 
-            Thread(Runnable {
-                Thread.sleep(5 * 1000)
-                val msg = Message()
-                msg.what = mStartPicture
-                mTakePicureHandler.sendMessage(msg)
-            }).start()
+            // TODO->设置自动拍照
+//            Thread(Runnable {
+//                Thread.sleep(5 * 1000)
+//                val msg = Message()
+//                msg.what = mStartPicture
+//                mTakePicureHandler.sendMessage(msg)
+//            }).start()
         }
     }
 
@@ -123,6 +124,52 @@ class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLa
         mPhotoCallback = callback
     }
 
+    fun takePicture() {
+        mCamera?.apply {
+            takePicture(null, null, Camera.PictureCallback { bytes, camera ->
+                val imagesPath = if (mImagePath.isEmpty()) "${mContext.filesDir}/images" else mImagePath
+
+                val imagesDir = File(imagesPath)
+                if (!imagesDir.exists()) {
+                    imagesDir.mkdirs()
+                }
+
+                val imageName = if (mImageName.isEmpty()) "ycb-${System.currentTimeMillis()}.png" else mImageName
+                val imageFile = File(imagesPath, imageName)
+                imageFile.deleteOnExit()
+
+                val fos: FileOutputStream?
+                try {
+                    fos = FileOutputStream(imageFile)
+                    try {
+                        fos.write(bytes)
+                        fos.flush()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                    fos.close()
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                }
+
+
+                if (mPhotoCallback != null) {
+                    if (imageFile.exists()) {
+                        mPhotoCallback?.onPhotoSuc(imageFile.path)
+                    } else {
+                        mPhotoCallback?.onPhotoFail()
+                        camera.startPreview()
+                    }
+                } else {
+                    mPhotoCallback?.onPhotoFail()
+                    imageFile.deleteOnExit()
+                    camera.startPreview()
+                }
+            })
+        }
+    }
+
     private fun init() {
         releaseCamera()
 
@@ -131,7 +178,7 @@ class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLa
         }
 
         this.apply {
-            surfaceTextureListener = this@AutoPhotoView
+            surfaceTextureListener = this@ScanfCarTypeView
         }
     }
 
@@ -186,7 +233,7 @@ class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLa
         val surfaceDimensions = RectF(0f, 0f, mDisplayWidth.toFloat(), mDisplayHeight.toFloat())
         val matrix = Matrix()
         matrix.setRectToRect(previewRect, surfaceDimensions, Matrix.ScaleToFit.FILL)
-        this@AutoPhotoView.setTransform(matrix)
+        this@ScanfCarTypeView.setTransform(matrix)
 
         var displayRotation = 0
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -206,52 +253,6 @@ class AutoPhotoView : TextureView, TextureView.SurfaceTextureListener, View.OnLa
             orientation = (360 - orientation) % 360
         }
         return orientation
-    }
-
-    private fun takePicture() {
-        mCamera?.apply {
-            takePicture(null, null, Camera.PictureCallback { bytes, camera ->
-                val imagesPath = if (mImagePath.isEmpty()) "${mContext.filesDir}/images" else mImagePath
-
-                val imagesDir = File(imagesPath)
-                if (!imagesDir.exists()) {
-                    imagesDir.mkdirs()
-                }
-
-                val imageName = if (mImageName.isEmpty()) "ycb-${System.currentTimeMillis()}.png" else mImageName
-                val imageFile = File(imagesPath, imageName)
-                imageFile.deleteOnExit()
-
-                val fos: FileOutputStream?
-                try {
-                    fos = FileOutputStream(imageFile)
-                    try {
-                        fos.write(bytes)
-                        fos.flush()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-
-                    fos.close()
-                } catch (e: FileNotFoundException) {
-                    e.printStackTrace()
-                }
-
-
-                if (mPhotoCallback != null) {
-                    if (imageFile.exists()) {
-                        mPhotoCallback?.onPhotoSuc(imageFile.path)
-                    } else {
-                        mPhotoCallback?.onPhotoFail()
-                        camera.startPreview()
-                    }
-                } else {
-                    mPhotoCallback?.onPhotoFail()
-                    imageFile.deleteOnExit()
-                    camera.startPreview()
-                }
-            })
-        }
     }
 
     interface AutoPhotoCallback {
