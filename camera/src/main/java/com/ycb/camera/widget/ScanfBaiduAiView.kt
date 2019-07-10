@@ -25,7 +25,7 @@ import java.io.IOException
 /**
  * @desc TODO->扫描车型的预览和拍照视图
  */
-class ScanfCarTypeView : TextureView, TextureView.SurfaceTextureListener, View.OnLayoutChangeListener {
+class ScanfBaiduAiView : TextureView, TextureView.SurfaceTextureListener, View.OnLayoutChangeListener {
 
     private val mContext: Context
     private val mStartPicture = 0
@@ -178,7 +178,7 @@ class ScanfCarTypeView : TextureView, TextureView.SurfaceTextureListener, View.O
         }
 
         this.apply {
-            surfaceTextureListener = this@ScanfCarTypeView
+            surfaceTextureListener = this@ScanfBaiduAiView
         }
     }
 
@@ -233,7 +233,7 @@ class ScanfCarTypeView : TextureView, TextureView.SurfaceTextureListener, View.O
         val surfaceDimensions = RectF(0f, 0f, mDisplayWidth.toFloat(), mDisplayHeight.toFloat())
         val matrix = Matrix()
         matrix.setRectToRect(previewRect, surfaceDimensions, Matrix.ScaleToFit.FILL)
-        this@ScanfCarTypeView.setTransform(matrix)
+        this@ScanfBaiduAiView.setTransform(matrix)
 
         var displayRotation = 0
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager

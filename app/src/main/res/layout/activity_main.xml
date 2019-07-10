@@ -6,10 +6,15 @@
 	android:layout_height="match_parent"
 	tools:context=".MainActivity">
 	
-	<com.ycb.camera.widget.ScanfCarTypeView
+	<com.ycb.camera.widget.ScanfBaiduAiView
 		android:id="@+id/test"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
+	
+	<com.ycb.camera.widget.ScanfBoxView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:sbv_tip_text="将证件放置到扫描框中，点击识别按钮进行识别" />
 	
 	<ImageButton
 		android:id="@+id/ibtnMainStartScanf"

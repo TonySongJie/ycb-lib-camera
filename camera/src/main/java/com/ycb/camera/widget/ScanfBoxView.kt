@@ -29,12 +29,8 @@ class ScanfBoxView : View {
     private var mTipTextMargin = 0
     private var mTipTextSize = 0
     private var mTipTextColor = 0
-    private var mTipText = "这是随便写的测试文字"
+    private var mTipText = ""
     private var mTipTextSl: StaticLayout? = null
-
-    private var mScanLineY = 0
-    private var mScanLineSize = 0
-    private var mScanLineColor = 0
 
     private var mTopOffset = 0
     private var mRectWidth = 0
@@ -59,6 +55,7 @@ class ScanfBoxView : View {
 
         mCornerColor = typedArray.getColor(R.styleable.ScanfBoxView_sbv_corner_color, Color.WHITE)
 
+        mTipText = typedArray.getString(R.styleable.ScanfBoxView_sbv_tip_text) ?: "提示文字"
         mTipTextMargin = typedArray.getInt(R.styleable.ScanfBoxView_sbv_tip_text_margin, dp2px(context, 20f))
         mTipTextSize = typedArray.getInt(R.styleable.ScanfBoxView_sbv_tip_text_size, dp2px(context, 14f))
         mTipTextColor = typedArray.getColor(R.styleable.ScanfBoxView_sbv_tip_text_color, Color.WHITE)
@@ -72,11 +69,10 @@ class ScanfBoxView : View {
             return
         }
 
-//        drawMask(canvas)
-//        drawBorderLine(canvas)
-//        drawCornerLine(canvas)
-//        drawTipText(canvas)
-        drawSanfLine(canvas)
+        drawMask(canvas)
+        drawBorderLine(canvas)
+        drawCornerLine(canvas)
+        drawTipText(canvas)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -95,11 +91,8 @@ class ScanfBoxView : View {
         mCornerSize = dp2px(context, 3f)
         mHalfCornerSize = 1.0f * mCornerSize / 2
 
-        mScanLineSize = dp2px(context, 1f)
-        mScanLineColor = Color.WHITE
-
         mTopOffset = dp2px(context, 90f)
-        mRectWidth = dp2px(context, 200f)
+        mRectWidth = dp2px(context, 320f)
         mRectHeight = dp2px(context, 200f)
         mBarcodeRectHeight = dp2px(context, 140f)
 
@@ -239,24 +232,6 @@ class ScanfBoxView : View {
             mFramingRect!!.top,
             mFramingRect!!.right,
             mFramingRect!!.bottom
-        )
-    }
-
-    private fun drawSanfLine(canvas: Canvas?) {
-        mPaint.color = Color.WHITE
-
-        if (mScanLineY > (canvas?.height!! - 48)) {
-            mScanLineY = 0
-        } else {
-            mScanLineY += 1
-        }
-
-        canvas.drawLine(
-            0f,
-            mScanLineY.toFloat(),
-            canvas.width.toFloat(),
-            mScanLineY.toFloat(),
-            mPaint
         )
     }
 
