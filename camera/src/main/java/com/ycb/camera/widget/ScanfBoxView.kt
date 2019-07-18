@@ -32,13 +32,14 @@ class ScanfBoxView : View {
     private var mTipText = ""
     private var mTipTextSl: StaticLayout? = null
 
-    private var mTopOffset = 0
+    private var mRectTopOffset = 0
     private var mRectWidth = 0
     private var mRectHeight = 0
     private var mBarcodeRectHeight = 0
-    private var mScanLineMargin = 0
 
     private var mFramingRect: Rect? = null
+
+    private var isScreenFull = false
 
     private val mPaint = Paint()
     private val mTipTextPaint = TextPaint()
@@ -50,15 +51,29 @@ class ScanfBoxView : View {
 
         val typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ScanfBoxView)
         mMaskColor = typedArray.getColor(R.styleable.ScanfBoxView_sbv_mask_color, Color.parseColor("#33FFFFFF"))
+        mRectTopOffset =
+            typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_top_offset, dp2px(context, 200f))
+
+        mRectWidth =
+            typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_box_width, dp2px(context, 320f))
+        mRectHeight =
+            typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_box_height, dp2px(context, 200f))
 
         mBorderColor = typedArray.getColor(R.styleable.ScanfBoxView_sbv_border_color, Color.WHITE)
+        mBorderSize = typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_border_size, dp2px(context, 1f))
 
         mCornerColor = typedArray.getColor(R.styleable.ScanfBoxView_sbv_corner_color, Color.WHITE)
+        mCornerSize = typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_corner_size, dp2px(context, 2f))
 
+        mIsTipTextBelowRect = typedArray.getBoolean(R.styleable.ScanfBoxView_sbv_tip_text_showboxup, false)
         mTipText = typedArray.getString(R.styleable.ScanfBoxView_sbv_tip_text) ?: "提示文字"
-        mTipTextMargin = typedArray.getInt(R.styleable.ScanfBoxView_sbv_tip_text_margin, dp2px(context, 20f))
-        mTipTextSize = typedArray.getInt(R.styleable.ScanfBoxView_sbv_tip_text_size, dp2px(context, 14f))
+        mTipTextMargin =
+            typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_tip_text_margin, dp2px(context, 0f))
+        mTipTextSize =
+            typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_tip_text_size, dp2px(context, 14f))
         mTipTextColor = typedArray.getColor(R.styleable.ScanfBoxView_sbv_tip_text_color, Color.WHITE)
+
+        isScreenFull = typedArray.getBoolean(R.styleable.ScanfBoxView_sbv_screen_full, false)
 
         typedArray.recycle()
     }
@@ -69,10 +84,13 @@ class ScanfBoxView : View {
             return
         }
 
-        drawMask(canvas)
-        drawBorderLine(canvas)
-        drawCornerLine(canvas)
-        drawTipText(canvas)
+        if (isScreenFull) {
+        } else {
+            drawMask(canvas)
+            drawBorderLine(canvas)
+            drawCornerLine(canvas)
+            drawTipText(canvas)
+        }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -85,18 +103,12 @@ class ScanfBoxView : View {
 
         mTipTextPaint.isAntiAlias = true
 
-        mBorderSize = dp2px(context, 1f)
-
         mCornerLength = dp2px(context, 20f)
         mCornerSize = dp2px(context, 3f)
         mHalfCornerSize = 1.0f * mCornerSize / 2
 
-        mTopOffset = dp2px(context, 90f)
-        mRectWidth = dp2px(context, 320f)
         mRectHeight = dp2px(context, 200f)
         mBarcodeRectHeight = dp2px(context, 140f)
-
-        mScanLineMargin = 0
     }
 
     private fun drawMask(canvas: Canvas?) {
@@ -208,9 +220,22 @@ class ScanfBoxView : View {
         mTipTextPaint.color = mTipTextColor
 
         if (mIsTipTextBelowRect) {
-            // TODO->绘制在扫描框下面
-        } else {
             // TODO->绘制在扫描框上面
+            val tipRect = Rect()
+            mTipTextPaint.getTextBounds(mTipText, 0, mTipText.length, tipRect)
+
+            mTipTextSl =
+                StaticLayout(mTipText, mTipTextPaint, canvas?.width!!, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false)
+
+            canvas.save()
+            canvas.translate(
+                ((canvas.width - tipRect.width()) / 2).toFloat(),
+                (mFramingRect!!.top - mTipTextMargin - (mTipTextSl?.height ?: 0)).toFloat()
+            )
+            mTipTextSl?.draw(canvas)
+            canvas.restore()
+        } else {
+            // TODO->绘制在扫描框下面
             val tipRect = Rect()
             mTipTextPaint.getTextBounds(mTipText, 0, mTipText.length, tipRect)
 
@@ -237,7 +262,7 @@ class ScanfBoxView : View {
 
     private fun calFramingRect() {
         val leftOffset = (width - mRectWidth) / 2
-        mFramingRect = Rect(leftOffset, mTopOffset, leftOffset + mRectWidth, mTopOffset + mRectHeight)
+        mFramingRect = Rect(leftOffset, mRectTopOffset, leftOffset + mRectWidth, mRectTopOffset + mRectHeight)
     }
 
     private fun dp2px(context: Context, dpValue: Float): Int {

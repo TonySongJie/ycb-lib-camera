@@ -4,17 +4,18 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@android:color/black"
 	tools:context=".MainActivity">
 	
-	<com.ycb.camera.widget.ScanfBaiduAiView
+	<!--<com.ycb.camera.widget.ScanfBaiduAiView
 		android:id="@+id/test"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
+		android:layout_height="match_parent" />-->
 	
 	<com.ycb.camera.widget.ScanfBoxView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		app:sbv_tip_text="将证件放置到扫描框中，点击识别按钮进行识别" />
+		app:sbv_screen_full="true" />
 	
 	<ImageButton
 		android:id="@+id/ibtnMainStartScanf"

@@ -2,14 +2,23 @@
 <resources>
 	<declare-styleable name="ScanfBoxView">
 		<attr name="sbv_mask_color" format="color" />
+		<attr name="sbv_top_offset" format="dimension" />
+		
+		<attr name="sbv_box_width" format="dimension" />
+		<attr name="sbv_box_height" format="dimension" />
 		
 		<attr name="sbv_corner_color" format="color" />
+		<attr name="sbv_corner_size" format="dimension" />
 		
 		<attr name="sbv_border_color" format="color" />
+		<attr name="sbv_border_size" format="dimension" />
 		
+		<attr name="sbv_tip_text_showboxup" format="boolean" />
 		<attr name="sbv_tip_text" format="string|reference" />
 		<attr name="sbv_tip_text_margin" format="dimension" />
 		<attr name="sbv_tip_text_size" format="dimension" />
 		<attr name="sbv_tip_text_color" format="color" />
+		
+		<attr name="sbv_screen_full" format="boolean" />
 	</declare-styleable>
 </resources>
