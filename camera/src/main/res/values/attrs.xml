@@ -19,6 +19,11 @@
 		<attr name="sbv_tip_text_size" format="dimension" />
 		<attr name="sbv_tip_text_color" format="color" />
 		
+		<attr name="sbv_scanf_line_size" format="dimension" />
+		<attr name="sbv_scanf_line_color" format="color" />
+		<attr name="sbv_scanf_line_margin_top" format="dimension" />
+		<attr name="sbv_scanf_line_margin_x" format="dimension" />
+		
 		<attr name="sbv_screen_full" format="boolean" />
 	</declare-styleable>
 </resources>

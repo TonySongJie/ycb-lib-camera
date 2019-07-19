@@ -37,6 +37,12 @@ class ScanfBoxView : View {
     private var mRectHeight = 0
     private var mBarcodeRectHeight = 0
 
+    private var mScanfLineStartY = 1f
+    private var mScanfLineSize = 1
+    private var mScanfLineMarginTop = 0
+    private var mScanfLineMarginX = 0
+    private var mScanfLineColor = Color.parseColor("#FFFFFFFF")
+
     private var mFramingRect: Rect? = null
 
     private var isScreenFull = false
@@ -73,6 +79,14 @@ class ScanfBoxView : View {
             typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_tip_text_size, dp2px(context, 14f))
         mTipTextColor = typedArray.getColor(R.styleable.ScanfBoxView_sbv_tip_text_color, Color.WHITE)
 
+        mScanfLineSize =
+            typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_scanf_line_size, 1)
+        mScanfLineColor = typedArray.getColor(R.styleable.ScanfBoxView_sbv_scanf_line_color, Color.WHITE)
+        mScanfLineMarginTop =
+            typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_scanf_line_margin_top, dp2px(context, 24f))
+        mScanfLineMarginX =
+            typedArray.getDimensionPixelOffset(R.styleable.ScanfBoxView_sbv_scanf_line_margin_x, dp2px(context, 16f))
+
         isScreenFull = typedArray.getBoolean(R.styleable.ScanfBoxView_sbv_screen_full, false)
 
         typedArray.recycle()
@@ -85,6 +99,7 @@ class ScanfBoxView : View {
         }
 
         if (isScreenFull) {
+            drawScreenFullScanfLine(canvas)
         } else {
             drawMask(canvas)
             drawBorderLine(canvas)
@@ -98,6 +113,11 @@ class ScanfBoxView : View {
         calFramingRect()
     }
 
+    fun setScreenFull(isScreenFull: Boolean) {
+        this.isScreenFull = isScreenFull
+        invalidate()
+    }
+
     private fun init(context: Context) {
         mPaint.isAntiAlias = true
 
@@ -109,6 +129,8 @@ class ScanfBoxView : View {
 
         mRectHeight = dp2px(context, 200f)
         mBarcodeRectHeight = dp2px(context, 140f)
+
+        mScanfLineStartY = mScanfLineMarginTop.toFloat()
     }
 
     private fun drawMask(canvas: Canvas?) {
@@ -258,6 +280,26 @@ class ScanfBoxView : View {
             mFramingRect!!.right,
             mFramingRect!!.bottom
         )
+    }
+
+    private fun drawScreenFullScanfLine(canvas: Canvas?) {
+        mPaint.style = Paint.Style.FILL
+        mPaint.color = mScanfLineColor
+        mPaint.strokeWidth = mScanfLineSize.toFloat()
+        canvas?.drawLine(
+            mScanfLineMarginX.toFloat(),
+            mScanfLineStartY,
+            width.toFloat() - mScanfLineMarginX,
+            mScanfLineStartY,
+            mPaint
+        )
+
+        if (mScanfLineStartY < height)
+            mScanfLineStartY += (height - mScanfLineMarginTop) / 200
+        else
+            mScanfLineStartY = mScanfLineMarginTop.toFloat()
+
+        postInvalidate()
     }
 
     private fun calFramingRect() {

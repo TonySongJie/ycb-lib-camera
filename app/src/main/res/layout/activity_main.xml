@@ -13,8 +13,10 @@
 		android:layout_height="match_parent" />-->
 	
 	<com.ycb.camera.widget.ScanfBoxView
+		android:id="@+id/sbvMainTest"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		app:sbv_scanf_line_margin_top="24dp"
 		app:sbv_screen_full="true" />
 	
 	<ImageButton
@@ -24,6 +26,7 @@
 		android:layout_marginBottom="32dp"
 		android:background="@null"
 		android:src="@drawable/icon_scanf_car_s"
+		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         ibtnMainStartScanf.setOnClickListener {
-//            test.takePicture()
+            //            test.takePicture()
         }
 
 //        test.setImagePath("$filesDir/images", "ycb_${System.currentTimeMillis()}.png")
