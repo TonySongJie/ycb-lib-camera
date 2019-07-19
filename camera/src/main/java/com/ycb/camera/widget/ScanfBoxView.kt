@@ -113,8 +113,14 @@ class ScanfBoxView : View {
         calFramingRect()
     }
 
+    fun setTipText(tipText: String) {
+        this.mTipText = tipText
+        invalidate()
+    }
+
     fun setScreenFull(isScreenFull: Boolean) {
         this.isScreenFull = isScreenFull
+        mScanfLineStartY = mScanfLineMarginTop.toFloat()
         invalidate()
     }
 

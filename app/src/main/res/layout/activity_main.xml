@@ -17,7 +17,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		app:sbv_scanf_line_margin_top="24dp"
-		app:sbv_screen_full="true" />
+		app:sbv_screen_full="false"
+		app:sbv_top_offset="300dp" />
 	
 	<ImageButton
 		android:id="@+id/ibtnMainStartScanf"

@@ -10,6 +10,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        sbvMainTest.setTipText("测试动态设置提示文字")
+
         ibtnMainStartScanf.setOnClickListener {
             //            test.takePicture()
         }
